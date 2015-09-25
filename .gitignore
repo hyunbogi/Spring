@@ -1,0 +1,16 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Gradle:
+.gradle
+
+# Mac OS
+.DS_Store
+
+# Build output directory
+/build
+
+/captures
