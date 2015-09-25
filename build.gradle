@@ -10,5 +10,6 @@ repositories {
 }
 
 dependencies {
+    compile 'mysql:mysql-connector-java:5.1.36'
     testCompile 'junit:junit:4.12'
 }
