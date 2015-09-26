@@ -1,6 +1,7 @@
 package com.hyunbogi.spring.dao;
 
-import com.hyunbogi.spring.db.SimpleConnectionMaker;
+import com.hyunbogi.spring.db.ConnectionMaker;
+import com.hyunbogi.spring.db.DConnectionMaker;
 import com.hyunbogi.spring.model.User;
 
 import java.sql.Connection;
@@ -9,14 +10,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDao {
-    private SimpleConnectionMaker simpleConnectionMaker;
+    private ConnectionMaker connectionMaker;
 
-    public UserDao() {
-        simpleConnectionMaker = new SimpleConnectionMaker();
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = simpleConnectionMaker.makeNewConnection();
+        Connection c = connectionMaker.makeNewConnection();
         PreparedStatement ps = c.prepareStatement(
                 "INSERT INTO users (id, name, password) VALUES (?, ?, ?)"
         );
@@ -31,7 +32,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = simpleConnectionMaker.makeNewConnection();
+        Connection c = connectionMaker.makeNewConnection();
         PreparedStatement ps = c.prepareStatement(
                 "SELECT * FROM users WHERE id = ?"
         );
@@ -53,7 +54,8 @@ public class UserDao {
     }
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        UserDao userDao = new UserDao();
+        ConnectionMaker connectionMaker = new DConnectionMaker();
+        UserDao userDao = new UserDao(connectionMaker);
 
         User user = new User();
         user.setId("kmalloc");
