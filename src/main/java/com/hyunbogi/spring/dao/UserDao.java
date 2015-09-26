@@ -51,23 +51,4 @@ public class UserDao {
 
         return user;
     }
-
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        UserDao userDao = new DaoFactory().userDao();
-
-        User user = new User();
-        user.setId("kmalloc");
-        user.setName("Hyunbok Lee");
-        user.setPassword("aaa12345");
-
-        userDao.add(user);
-
-        System.out.println(user.getId() + " success");
-
-        User user2 = userDao.get(user.getId());
-        System.out.println(user2.getName());
-        System.out.println(user2.getPassword());
-
-        System.out.println(user2.getId() + " success");
-    }
 }
