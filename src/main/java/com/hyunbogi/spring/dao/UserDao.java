@@ -1,20 +1,22 @@
 package com.hyunbogi.spring.dao;
 
+import com.hyunbogi.spring.db.SimpleConnectionMaker;
 import com.hyunbogi.spring.model.User;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDao {
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection c = DriverManager.getConnection(
-                "jdbc:mysql://localhost/springdb", "hyunbogi", "aaa12345"
-        );
+    private SimpleConnectionMaker simpleConnectionMaker;
 
+    public UserDao() {
+        simpleConnectionMaker = new SimpleConnectionMaker();
+    }
+
+    public void add(User user) throws ClassNotFoundException, SQLException {
+        Connection c = simpleConnectionMaker.makeNewConnection();
         PreparedStatement ps = c.prepareStatement(
                 "INSERT INTO users (id, name, password) VALUES (?, ?, ?)"
         );
@@ -29,11 +31,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection c = DriverManager.getConnection(
-                "jdbc:mysql://localhost/springdb", "hyunbogi", "aaa12345"
-        );
-
+        Connection c = simpleConnectionMaker.makeNewConnection();
         PreparedStatement ps = c.prepareStatement(
                 "SELECT * FROM users WHERE id = ?"
         );
