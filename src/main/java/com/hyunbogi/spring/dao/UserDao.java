@@ -1,7 +1,6 @@
 package com.hyunbogi.spring.dao;
 
 import com.hyunbogi.spring.db.ConnectionMaker;
-import com.hyunbogi.spring.db.DConnectionMaker;
 import com.hyunbogi.spring.model.User;
 
 import java.sql.Connection;
@@ -54,8 +53,7 @@ public class UserDao {
     }
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        ConnectionMaker connectionMaker = new DConnectionMaker();
-        UserDao userDao = new UserDao(connectionMaker);
+        UserDao userDao = new DaoFactory().userDao();
 
         User user = new User();
         user.setId("kmalloc");
