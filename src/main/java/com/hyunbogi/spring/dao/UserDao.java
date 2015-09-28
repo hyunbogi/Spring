@@ -1,52 +1,41 @@
 package com.hyunbogi.spring.dao;
 
 import com.hyunbogi.spring.model.User;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
-public class UserDao {
-    private JdbcTemplate jdbcTemplate;
+public interface UserDao {
+    /**
+     * 새로운 User를 DB에 추가한다.
+     *
+     * @param user
+     */
+    void add(User user);
 
-    private RowMapper<User> rowMapper = (rs, rowNum) ->
-            new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
+    /**
+     * 해당 id를 가진 User 정보를 DB에서 가져온다.
+     *
+     * @param id
+     * @return User 정보
+     */
+    User get(String id);
 
-    public void setDataSource(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+    /**
+     * DB에 저장된 모든 User 정보를 가져온다.
+     *
+     * @return User 리스트
+     */
+    List<User> getAll();
 
-    public void add(User user) throws SQLException {
-        jdbcTemplate.update(
-                "INSERT INTO users (id, name, password) VALUES (?, ?, ?)",
-                user.getId(),
-                user.getName(),
-                user.getPassword()
-        );
-    }
+    /**
+     * DB의 모든 User 정보를 삭제한다.
+     */
+    void deleteAll();
 
-    public User get(String id) throws SQLException {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM users WHERE id = ?",
-                new Object[]{id},
-                rowMapper
-        );
-    }
-
-    public List<User> getAll() throws SQLException {
-        return jdbcTemplate.query(
-                "SELECT * FROM users ORDER BY id",
-                rowMapper
-        );
-    }
-
-    public void deleteAll() throws SQLException {
-        jdbcTemplate.update("DELETE FROM users");
-    }
-
-    public int getCount() throws SQLException {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Integer.class);
-    }
+    /**
+     * DB에 저장된 모든 User의 수를 가져온다.
+     *
+     * @return DB에 저장된 모든 User의 수
+     */
+    int getCount();
 }
