@@ -2,12 +2,17 @@ package com.hyunbogi.spring.dao;
 
 import com.hyunbogi.spring.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.List;
 
 public class UserDao {
     private JdbcTemplate jdbcTemplate;
+
+    private RowMapper<User> rowMapper = (rs, rowNum) ->
+            new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
 
     public void setDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -26,9 +31,14 @@ public class UserDao {
         return jdbcTemplate.queryForObject(
                 "SELECT * FROM users WHERE id = ?",
                 new Object[]{id},
-                (rs, rowNum) -> {
-                    return new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
-                }
+                rowMapper
+        );
+    }
+
+    public List<User> getAll() throws SQLException {
+        return jdbcTemplate.query(
+                "SELECT * FROM users ORDER BY id",
+                rowMapper
         );
     }
 
