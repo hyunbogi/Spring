@@ -14,5 +14,4 @@
     <bean id="userDao" class="com.hyunbogi.spring.dao.UserDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
 </beans>
