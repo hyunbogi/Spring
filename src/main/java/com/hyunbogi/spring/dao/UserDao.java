@@ -28,6 +28,11 @@ public interface UserDao {
     List<User> getAll();
 
     /**
+     * User 정보를 DB에 수정하여 업데이트한다.
+     */
+    void update(User user);
+
+    /**
      * DB의 모든 User 정보를 삭제한다.
      */
     void deleteAll();
