@@ -1,5 +1,6 @@
 package com.hyunbogi.spring.dao;
 
+import com.hyunbogi.spring.model.Level;
 import com.hyunbogi.spring.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,9 +30,9 @@ public class UserDaoTest {
     @Before
     public void setUp() {
         // User의 id를 오름차순으로 추가할 것
-        user1 = new User("aaa", "Taeyeon Kim", "aaa12345");
-        user2 = new User("bbb", "Jieun Lee", "aaa12345");
-        user3 = new User("ccc", "Boyoung Park", "aaa12345");
+        user1 = new User("aaa", "Taeyeon Kim", "aaa12345", Level.BASIC, 1, 0);
+        user2 = new User("bbb", "Jieun Lee", "aaa12345", Level.SILVER, 55, 10);
+        user3 = new User("ccc", "Boyoung Park", "aaa12345", Level.GOLD, 100, 40);
     }
 
     @Test
@@ -44,12 +45,10 @@ public class UserDaoTest {
         assertThat(dao.getCount(), is(2));
 
         User userGet1 = dao.get(user1.getId());
-        assertThat(userGet1.getName(), is(user1.getName()));
-        assertThat(userGet1.getPassword(), is(user1.getPassword()));
+        checkSameUser(userGet1, user1);
 
         User userGet2 = dao.get(user2.getId());
-        assertThat(userGet2.getName(), is(user2.getName()));
-        assertThat(userGet2.getPassword(), is(user2.getPassword()));
+        checkSameUser(userGet2, user2);
     }
 
     @Test(expected = EmptyResultDataAccessException.class)
@@ -113,5 +112,8 @@ public class UserDaoTest {
         assertThat(user1.getId(), is(user2.getId()));
         assertThat(user1.getName(), is(user2.getName()));
         assertThat(user1.getPassword(), is(user2.getPassword()));
+        assertThat(user1.getLevel(), is(user2.getLevel()));
+        assertThat(user1.getLogin(), is(user2.getLogin()));
+        assertThat(user1.getRecommend(), is(user2.getRecommend()));
     }
 }

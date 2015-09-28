@@ -1,5 +1,6 @@
 package com.hyunbogi.spring.dao;
 
+import com.hyunbogi.spring.model.Level;
 import com.hyunbogi.spring.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,8 +11,18 @@ import java.util.List;
 public class UserDaoJdbc implements UserDao {
     private JdbcTemplate jdbcTemplate;
 
-    private RowMapper<User> rowMapper = (rs, rowNum) ->
-            new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
+    private RowMapper<User> rowMapper = (rs, rowNum) -> {
+        User user = new User();
+        user.setId(rs.getString("id"));
+        user.setName(rs.getString("name"));
+        user.setPassword(rs.getString("password"));
+        user.setLevel(Level.valueOf(rs.getInt("level")));
+        user.setLogin(rs.getInt("login"));
+        user.setRecommend(rs.getInt("recommend"));
+
+        return user;
+    };
+
 
     public void setDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -20,10 +31,13 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public void add(User user) {
         jdbcTemplate.update(
-                "INSERT INTO users (id, name, password) VALUES (?, ?, ?)",
+                "INSERT INTO users (id, name, password, level, login, recommend) VALUES (?, ?, ?, ?, ?, ?)",
                 user.getId(),
                 user.getName(),
-                user.getPassword()
+                user.getPassword(),
+                user.getLevel().intValue(),
+                user.getLogin(),
+                user.getRecommend()
         );
     }
 
