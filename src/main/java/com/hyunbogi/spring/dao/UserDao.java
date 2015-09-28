@@ -8,14 +8,14 @@ public interface UserDao {
     /**
      * 새로운 User를 DB에 추가한다.
      *
-     * @param user
+     * @param user 추가할 User 정보
      */
     void add(User user);
 
     /**
      * 해당 id를 가진 User 정보를 DB에서 가져온다.
      *
-     * @param id
+     * @param id 정보를 가져올 User의 ID
      * @return User 정보
      */
     User get(String id);
