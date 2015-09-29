@@ -67,4 +67,14 @@ public class User {
     public void setRecommend(int recommend) {
         this.recommend = recommend;
     }
+
+    public void upgradeLevel() {
+        Level nextLevel = level.nextLevel();
+
+        if (nextLevel == null) {
+            throw new IllegalStateException("Cannot upgrade " + level);
+        }
+
+        level = nextLevel;
+    }
 }
