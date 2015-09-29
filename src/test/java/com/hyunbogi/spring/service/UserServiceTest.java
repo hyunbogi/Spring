@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-applicationContext.xml")
@@ -24,6 +26,9 @@ public class UserServiceTest {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private DataSource dataSource;
 
     private List<User> users;
 
@@ -39,7 +44,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void upgradeLevels() {
+    public void upgradeLevels() throws Exception {
         userDao.deleteAll();
         users.forEach(userDao::add);
 
@@ -52,6 +57,25 @@ public class UserServiceTest {
         checkLevelUpgraded(users.get(4), false);
     }
 
+    @Test
+    public void upgradeAllOrNothing() throws Exception {
+        TestUserService testUserService = new TestUserService(users.get(3).getId());
+        testUserService.setUserDao(userDao);
+        testUserService.setDataSource(dataSource);
+
+        userDao.deleteAll();
+        users.forEach(userDao::add);
+
+        try {
+            testUserService.upgradeLevels();
+            fail("TestUserServiceException expected");
+        } catch (TestUserServiceException e) {
+            // do nothing
+        }
+
+        checkLevelUpgraded(users.get(1), false);
+    }
+
     private void checkLevelUpgraded(User user, boolean upgraded) {
         User userUpdate = userDao.get(user.getId());
         if (upgraded) {
@@ -59,5 +83,26 @@ public class UserServiceTest {
         } else {
             assertThat(userUpdate.getLevel(), is(user.getLevel()));
         }
+    }
+
+    private static class TestUserService extends UserService {
+        private String id;
+
+        public TestUserService(String id) {
+            this.id = id;
+        }
+
+        @Override
+        protected void upgradeLevel(User user) {
+            if (user.getId().equals(id)) {
+                throw new TestUserServiceException();
+            }
+
+            super.upgradeLevel(user);
+        }
+    }
+
+    private static class TestUserServiceException extends RuntimeException {
+        // empty
     }
 }
