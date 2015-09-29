@@ -120,6 +120,7 @@ public class UserDaoTest {
         user1.setLevel(Level.GOLD);
         user1.setLogin(1000);
         user1.setRecommend(999);
+        user1.setEmail("hyunbogi@email.com");
         dao.update(user1);
 
         User userUpdate = dao.get(user1.getId());
@@ -136,5 +137,6 @@ public class UserDaoTest {
         assertThat(user1.getLevel(), is(user2.getLevel()));
         assertThat(user1.getLogin(), is(user2.getLogin()));
         assertThat(user1.getRecommend(), is(user2.getRecommend()));
+        assertThat(user1.getEmail(), is(user2.getEmail()));
     }
 }
