@@ -35,11 +35,16 @@ public class UserServiceTest {
     @Before
     public void setUp() {
         users = Arrays.asList(
-                new User("aaa", "Jimin Han", "aaa12345", Level.BASIC, UserService.MIN_LOGIN_FOR_SILVER - 1, 0),
-                new User("bbb", "Choa", "aaa12345", Level.BASIC, UserService.MIN_LOGIN_FOR_SILVER, 0),
-                new User("ccc", "Ailee", "aaa12345", Level.SILVER, 60, UserService.MIN_RECOMMEND_FOR_GOLD - 1),
-                new User("ddd", "Seulgi Kim", "aaa12345", Level.SILVER, 60, UserService.MIN_RECOMMEND_FOR_GOLD),
-                new User("eee", "Hyeri", "aaa12345", Level.GOLD, 100, Integer.MAX_VALUE)
+                new User("aaa", "Jimin Han", "aaa12345",
+                        Level.BASIC, UserService.MIN_LOGIN_FOR_SILVER - 1, 0, "jmh@email.com"),
+                new User("bbb", "Choa", "aaa12345",
+                        Level.BASIC, UserService.MIN_LOGIN_FOR_SILVER, 0, "choa@email.com"),
+                new User("ccc", "Ailee", "aaa12345",
+                        Level.SILVER, 60, UserService.MIN_RECOMMEND_FOR_GOLD - 1, "ailee@email.com"),
+                new User("ddd", "Seulgi Kim", "aaa12345",
+                        Level.SILVER, 60, UserService.MIN_RECOMMEND_FOR_GOLD, "sgk@email.com"),
+                new User("eee", "Hyeri", "aaa12345",
+                        Level.GOLD, 100, Integer.MAX_VALUE, "hyeri@email.com")
         );
     }
 

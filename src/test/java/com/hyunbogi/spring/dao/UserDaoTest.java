@@ -30,9 +30,9 @@ public class UserDaoTest {
     @Before
     public void setUp() {
         // User의 id를 오름차순으로 추가할 것
-        user1 = new User("aaa", "Taeyeon Kim", "aaa12345", Level.BASIC, 1, 0);
-        user2 = new User("bbb", "Jieun Lee", "aaa12345", Level.SILVER, 55, 10);
-        user3 = new User("ccc", "Boyoung Park", "aaa12345", Level.GOLD, 100, 40);
+        user1 = new User("aaa", "Taeyeon Kim", "aaa12345", Level.BASIC, 1, 0, "tyk@email.com");
+        user2 = new User("bbb", "Jieun Lee", "aaa12345", Level.SILVER, 55, 10, "jel@email.com");
+        user3 = new User("ccc", "Boyoung Park", "aaa12345", Level.GOLD, 100, 40, "byp@email.com");
     }
 
     @Test
