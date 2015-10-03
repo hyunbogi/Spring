@@ -7,18 +7,17 @@ import com.hyunbogi.spring.model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.mail.MailSender;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -27,16 +26,15 @@ import static org.junit.Assert.fail;
 @ContextConfiguration("/test-applicationContext.xml")
 public class UserServiceTest {
     @Autowired
-    private ApplicationContext context;
-
-    @Autowired
+    @Qualifier("userService")
     private UserService userService;
 
     @Autowired
-    private UserDao userDao;
+    @Qualifier("testUserService")
+    private UserService testUserService;
 
     @Autowired
-    private MailSender mailSender;
+    private UserDao userDao;
 
     private List<User> users;
 
@@ -98,27 +96,23 @@ public class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     public void upgradeAllOrNothing() throws Exception {
-        TestUserService testUserService = new TestUserService(users.get(3).getId());
-        testUserService.setUserDao(userDao);
-        testUserService.setMailSender(mailSender);
-
-        ProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
-        txProxyFactoryBean.setTarget(testUserService);
-        UserService txUserService = (UserService) txProxyFactoryBean.getObject();
-
         userDao.deleteAll();
         users.forEach(userDao::add);
 
         try {
-            txUserService.upgradeLevels();
+            testUserService.upgradeLevels();
             fail("TestUserServiceException expected");
         } catch (TestUserServiceException e) {
             // do nothing
         }
 
         checkLevelUpgraded(users.get(1), false);
+    }
+
+    @Test
+    public void advisorAutoProxyCreator() {
+        assertThat(testUserService, is(instanceOf(Proxy.class)));
     }
 
     private void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
@@ -138,12 +132,8 @@ public class UserServiceTest {
     /**
      * 레벨을 업그레이드하는 도중 예외가 발생하는 경우를 테스트하기 위한 Mock 클래스
      */
-    private static class TestUserService extends UserServiceImpl {
-        private String id;
-
-        public TestUserService(String id) {
-            this.id = id;
-        }
+    public static class TestUserServiceImpl extends UserServiceImpl {
+        private String id = "ddd";
 
         @Override
         protected void upgradeLevel(User user) {
@@ -155,7 +145,7 @@ public class UserServiceTest {
         }
     }
 
-    private static class TestUserServiceException extends RuntimeException {
+    public static class TestUserServiceException extends RuntimeException {
         // empty
     }
 

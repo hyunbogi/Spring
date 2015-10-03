@@ -3,6 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
@@ -26,21 +27,22 @@
         <property name="mailSender" ref="mailSender"/>
     </bean>
 
-    <bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target" ref="userServiceImpl"/>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
+    <bean id="userService" class="com.hyunbogi.spring.service.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
+        <property name="mailSender" ref="mailSender"/>
+    </bean>
+
+    <bean id="testUserService"
+          class="com.hyunbogi.spring.service.UserServiceTest$TestUserServiceImpl"
+          parent="userService"/>
+
+    <bean id="transactionPointcut" class="com.hyunbogi.spring.aop.NameMatchClassMethodPointcut">
+        <property name="mappedClassName" value="*ServiceImpl"/>
+        <property name="mappedName" value="upgrade*"/>
     </bean>
 
     <bean id="transactionAdvice" class="com.hyunbogi.spring.aop.tx.TransactionAdvice">
         <property name="transactionManager" ref="transactionManager"/>
-    </bean>
-
-    <bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
-        <property name="mappedName" value="upgrade*"/>
     </bean>
 
     <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
