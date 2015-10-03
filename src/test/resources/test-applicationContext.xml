@@ -21,9 +21,11 @@
 
     <bean id="mailSender" class="com.hyunbogi.spring.mock.MockMailSender"/>
 
-    <bean id="userService" class="com.hyunbogi.spring.service.tx.UserServiceTx">
-        <property name="userService" ref="userServiceImpl"/>
+    <bean id="userService" class="com.hyunbogi.spring.service.tx.TxProxyFactoryBean">
+        <property name="target" ref="userServiceImpl"/>
         <property name="transactionManager" ref="transactionManager"/>
+        <property name="serviceInterface" value="com.hyunbogi.spring.service.UserService"/>
+        <property name="pattern" value="upgradeLevels"/>
     </bean>
 
     <bean id="userServiceImpl" class="com.hyunbogi.spring.service.UserServiceImpl">
