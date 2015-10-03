@@ -36,9 +36,8 @@
           class="com.hyunbogi.spring.service.UserServiceTest$TestUserServiceImpl"
           parent="userService"/>
 
-    <bean id="transactionPointcut" class="com.hyunbogi.spring.aop.NameMatchClassMethodPointcut">
-        <property name="mappedClassName" value="*ServiceImpl"/>
-        <property name="mappedName" value="upgrade*"/>
+    <bean id="transactionPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
+        <property name="expression" value="execution(* *..*ServiceImpl.upgrade*(..))"/>
     </bean>
 
     <bean id="transactionAdvice" class="com.hyunbogi.spring.aop.tx.TransactionAdvice">
