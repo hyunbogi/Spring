@@ -1,6 +1,11 @@
 package learning;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
+import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.NameMatchMethodPointcut;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -9,24 +14,7 @@ import java.lang.reflect.Proxy;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ReflectionTest {
-    @Test
-    public void invokeMethod() throws Exception {
-        String name = "Spring";
-
-        // length()
-        assertThat(name.length(), is(6));
-
-        Method lengthMethod = String.class.getMethod("length");
-        assertThat(lengthMethod.invoke(name), is(6));
-
-        // charAt()
-        assertThat(name.charAt(0), is('S'));
-
-        Method charAtMethod = String.class.getMethod("charAt", int.class);
-        assertThat(charAtMethod.invoke(name, 0), is('S'));
-    }
-
+public class DynamicProxyTest {
     @Test
     public void simpleProxy() {
         Hello hello = new HelloTarget();
@@ -50,6 +38,34 @@ public class ReflectionTest {
         assertThat(proxiedHello.sayHello("Taeyeon"), is("HELLO TAEYEON"));
         assertThat(proxiedHello.sayHi("Taeyeon"), is("HI TAEYEON"));
         assertThat(proxiedHello.sayThankYou("Taeyeon"), is("THANK YOU TAEYEON"));
+    }
+
+    @Test
+    public void proxyFactoryBean() {
+        ProxyFactoryBean pfBean = new ProxyFactoryBean();
+        pfBean.setTarget(new HelloTarget());
+        pfBean.addAdvice(new UppercaseAdvice());
+
+        Hello proxiedHello = (Hello) pfBean.getObject();
+        assertThat(proxiedHello.sayHello("Taeyeon"), is("HELLO TAEYEON"));
+        assertThat(proxiedHello.sayHi("Taeyeon"), is("HI TAEYEON"));
+        assertThat(proxiedHello.sayThankYou("Taeyeon"), is("THANK YOU TAEYEON"));
+    }
+
+    @Test
+    public void pointcutAdvisor() {
+        ProxyFactoryBean pfBean = new ProxyFactoryBean();
+        pfBean.setTarget(new HelloTarget());
+
+        NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
+        pointcut.setMappedName("sayH*");
+
+        pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
+
+        Hello proxiedHello = (Hello) pfBean.getObject();
+        assertThat(proxiedHello.sayHello("Taeyeon"), is("HELLO TAEYEON"));
+        assertThat(proxiedHello.sayHi("Taeyeon"), is("HI TAEYEON"));
+        assertThat(proxiedHello.sayThankYou("Taeyeon"), is("Thank You Taeyeon"));
     }
 
     interface Hello {
@@ -100,7 +116,7 @@ public class ReflectionTest {
         }
     }
 
-    public class UppercaseHandler implements InvocationHandler {
+    static class UppercaseHandler implements InvocationHandler {
         private Object target;
 
         public UppercaseHandler(Hello target) {
@@ -114,6 +130,14 @@ public class ReflectionTest {
                 return ((String) ret).toUpperCase();
             }
             return ret;
+        }
+    }
+
+    static class UppercaseAdvice implements MethodInterceptor {
+        @Override
+        public Object invoke(MethodInvocation invocation) throws Throwable {
+            String ret = (String) invocation.proceed();
+            return ret.toUpperCase();
         }
     }
 }
