@@ -15,15 +15,19 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="userService" class="com.hyunbogi.spring.service.UserService">
-        <property name="userDao" ref="userDao"/>
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="mailSender" ref="mailSender"/>
-    </bean>
-
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="mailSender" class="com.hyunbogi.spring.mock.MockMailSender"/>
+
+    <bean id="userService" class="com.hyunbogi.spring.service.tx.UserServiceTx">
+        <property name="userService" ref="userServiceImpl"/>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="userServiceImpl" class="com.hyunbogi.spring.service.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
+        <property name="mailSender" ref="mailSender"/>
+    </bean>
 </beans>
