@@ -24,9 +24,7 @@
         <property name="sqlService" ref="sqlService"/>
     </bean>
 
-    <bean id="sqlService" class="com.hyunbogi.spring.dao.sql.XmlSqlService">
-        <property name="sqlmapFile" value="/sql/sqlmap.xml"/>
-    </bean>
+    <bean id="sqlService" class="com.hyunbogi.spring.dao.sql.DefaultSqlService"/>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
