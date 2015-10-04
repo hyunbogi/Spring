@@ -17,7 +17,10 @@
 
     <bean id="userDao" class="com.hyunbogi.spring.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource"/>
+        <property name="sqlService" ref="sqlService"/>
     </bean>
+
+    <bean id="sqlService" class="com.hyunbogi.spring.dao.sql.XmlSqlService"/>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>

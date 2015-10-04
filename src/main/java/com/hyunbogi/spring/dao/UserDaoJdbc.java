@@ -1,5 +1,6 @@
 package com.hyunbogi.spring.dao;
 
+import com.hyunbogi.spring.dao.sql.SqlService;
 import com.hyunbogi.spring.model.Level;
 import com.hyunbogi.spring.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +11,8 @@ import java.util.List;
 
 public class UserDaoJdbc implements UserDao {
     private JdbcTemplate jdbcTemplate;
+
+    private SqlService sqlService;
 
     private RowMapper<User> rowMapper = (rs, rowNum) -> {
         User user = new User();
@@ -24,16 +27,18 @@ public class UserDaoJdbc implements UserDao {
         return user;
     };
 
-
     public void setDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    public void setSqlService(SqlService sqlService) {
+        this.sqlService = sqlService;
     }
 
     @Override
     public void add(User user) {
         jdbcTemplate.update(
-                "INSERT INTO users (id, name, password, level, login, recommend, email)"
-                        + " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                sqlService.getSql("userAdd"),
                 user.getId(),
                 user.getName(),
                 user.getPassword(),
@@ -47,7 +52,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public User get(String id) {
         return jdbcTemplate.queryForObject(
-                "SELECT * FROM users WHERE id = ?",
+                sqlService.getSql("userGet"),
                 new Object[]{id},
                 rowMapper
         );
@@ -55,17 +60,13 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public List<User> getAll() {
-        return jdbcTemplate.query(
-                "SELECT * FROM users ORDER BY id",
-                rowMapper
-        );
+        return jdbcTemplate.query(sqlService.getSql("userGetAll"), rowMapper);
     }
 
     @Override
     public void update(User user) {
         jdbcTemplate.update(
-                "UPDATE users SET name = ?, password = ?, level = ?, login = ?, recommend = ?, email = ?"
-                        + " WHERE id = ?",
+                sqlService.getSql("userUpdate"),
                 user.getName(),
                 user.getPassword(),
                 user.getLevel().intValue(),
@@ -78,11 +79,11 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public void deleteAll() {
-        jdbcTemplate.update("DELETE FROM users");
+        jdbcTemplate.update(sqlService.getSql("userDeleteAll"));
     }
 
     @Override
     public int getCount() {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Integer.class);
+        return jdbcTemplate.queryForObject(sqlService.getSql("userGetCount"), Integer.class);
     }
 }
