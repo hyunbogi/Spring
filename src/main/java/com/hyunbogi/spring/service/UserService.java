@@ -1,9 +1,11 @@
 package com.hyunbogi.spring.service;
 
 import com.hyunbogi.spring.model.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 public interface UserService {
     /**
      * User 정보를 추가한다.
@@ -18,6 +20,7 @@ public interface UserService {
      * @param id 가져올 User ID
      * @return User 정보
      */
+    @Transactional(readOnly = true)
     User get(String id);
 
     /**
@@ -25,6 +28,7 @@ public interface UserService {
      *
      * @return 가져온 User 정보 리스트
      */
+    @Transactional(readOnly = true)
     List<User> getAll();
 
     /**
