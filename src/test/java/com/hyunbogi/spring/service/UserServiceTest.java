@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -110,6 +111,11 @@ public class UserServiceTest {
         checkLevelUpgraded(users.get(1), false);
     }
 
+    @Test(expected = TransientDataAccessResourceException.class)
+    public void readOnlyTransactionAttribute() {
+        testUserService.getAll();
+    }
+
     @Test
     public void advisorAutoProxyCreator() {
         assertThat(testUserService, is(instanceOf(Proxy.class)));
@@ -134,6 +140,14 @@ public class UserServiceTest {
      */
     public static class TestUserServiceImpl extends UserServiceImpl {
         private String id = "ddd";
+
+        @Override
+        public List<User> getAll() {
+            for (User user : super.getAll()) {
+                super.update(user);
+            }
+            return null;
+        }
 
         @Override
         protected void upgradeLevel(User user) {
