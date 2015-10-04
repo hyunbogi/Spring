@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -119,6 +120,14 @@ public class UserServiceTest {
     @Test
     public void advisorAutoProxyCreator() {
         assertThat(testUserService, is(instanceOf(Proxy.class)));
+    }
+
+    @Test(expected = TransientDataAccessResourceException.class)
+    @Transactional(readOnly = true)
+    public void transactionSync() {
+        userService.deleteAll();
+        userService.add(users.get(0));
+        userService.add(users.get(1));
     }
 
     private void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
