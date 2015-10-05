@@ -26,7 +26,10 @@
 
     <bean id="sqlService" class="com.hyunbogi.spring.dao.sql.OxmSqlService">
         <property name="unmarshaller" ref="unmarshaller"/>
+        <property name="sqlRegistry" ref="sqlRegistry"/>
     </bean>
+
+    <bean id="sqlRegistry" class="com.hyunbogi.spring.dao.sql.ConcurrentHashMapSqlRegistry"/>
 
     <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="contextPath" value="com.hyunbogi.spring.dao.sql.jaxb"/>
