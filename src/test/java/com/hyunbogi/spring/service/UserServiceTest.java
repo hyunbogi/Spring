@@ -1,5 +1,6 @@
 package com.hyunbogi.spring.service;
 
+import com.hyunbogi.spring.context.TestApplicationContext;
 import com.hyunbogi.spring.dao.UserDao;
 import com.hyunbogi.spring.mock.MockMailSender;
 import com.hyunbogi.spring.model.Level;
@@ -25,7 +26,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/test-applicationContext.xml")
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class UserServiceTest {
     @Autowired
     @Qualifier("userService")

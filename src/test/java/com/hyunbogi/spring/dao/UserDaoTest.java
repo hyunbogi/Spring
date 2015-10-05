@@ -1,5 +1,6 @@
 package com.hyunbogi.spring.dao;
 
+import com.hyunbogi.spring.context.TestApplicationContext;
 import com.hyunbogi.spring.model.Level;
 import com.hyunbogi.spring.model.User;
 import org.junit.Before;
@@ -18,7 +19,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "/test-applicationContext.xml")
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class UserDaoTest {
     @Autowired
     private UserDao dao;
