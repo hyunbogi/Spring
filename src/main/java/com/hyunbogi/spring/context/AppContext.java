@@ -1,12 +1,15 @@
 package com.hyunbogi.spring.context;
 
+import com.hyunbogi.spring.annotation.EnableSqlService;
+import com.hyunbogi.spring.dao.sql.SqlMapConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.mail.MailSender;
@@ -19,10 +22,10 @@ import java.sql.Driver;
 
 @Configuration
 @EnableTransactionManagement
+@EnableSqlService
 @ComponentScan(basePackages = "com.hyunbogi.spring")
-@Import(SqlServiceContext.class)
 @PropertySource("/props/database.properties")
-public class AppContext {
+public class AppContext implements SqlMapConfig {
     @Value("${db.driverClass}")
     private Class<? extends Driver> driverClass;
 
@@ -65,5 +68,10 @@ public class AppContext {
     @Bean
     public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Override
+    public Resource getSqlMapResource() {
+        return new ClassPathResource("/sql/sqlmap.xml");
     }
 }
