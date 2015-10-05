@@ -10,7 +10,6 @@
             </sequence>
         </complexType>
     </element>
-
     <complexType name="sqlType">
         <simpleContent>
             <extension base="string">
