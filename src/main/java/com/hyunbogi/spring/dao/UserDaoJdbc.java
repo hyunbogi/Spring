@@ -3,15 +3,19 @@ package com.hyunbogi.spring.dao;
 import com.hyunbogi.spring.dao.sql.SqlService;
 import com.hyunbogi.spring.model.Level;
 import com.hyunbogi.spring.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
 
+@Repository
 public class UserDaoJdbc implements UserDao {
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     private SqlService sqlService;
 
     private RowMapper<User> rowMapper = (rs, rowNum) -> {
@@ -27,6 +31,7 @@ public class UserDaoJdbc implements UserDao {
         return user;
     };
 
+    @Autowired
     public void setDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }

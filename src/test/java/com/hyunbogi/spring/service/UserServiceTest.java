@@ -1,6 +1,7 @@
 package com.hyunbogi.spring.service;
 
-import com.hyunbogi.spring.context.TestApplicationContext;
+import com.hyunbogi.spring.context.AppContext;
+import com.hyunbogi.spring.context.TestAppContext;
 import com.hyunbogi.spring.dao.UserDao;
 import com.hyunbogi.spring.mock.MockMailSender;
 import com.hyunbogi.spring.model.Level;
@@ -11,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.TransientDataAccessResourceException;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +28,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationContext.class)
+@ActiveProfiles("test")
+@ContextConfiguration(classes = {AppContext.class, TestAppContext.class})
 public class UserServiceTest {
     @Autowired
     @Qualifier("userService")

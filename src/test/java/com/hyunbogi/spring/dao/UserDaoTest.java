@@ -1,6 +1,7 @@
 package com.hyunbogi.spring.dao;
 
-import com.hyunbogi.spring.context.TestApplicationContext;
+import com.hyunbogi.spring.context.AppContext;
+import com.hyunbogi.spring.context.TestAppContext;
 import com.hyunbogi.spring.model.Level;
 import com.hyunbogi.spring.model.User;
 import org.junit.Before;
@@ -9,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -19,7 +21,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationContext.class)
+@ActiveProfiles("test")
+@ContextConfiguration(classes = {AppContext.class, TestAppContext.class})
 public class UserDaoTest {
     @Autowired
     private UserDao dao;
