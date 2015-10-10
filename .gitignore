@@ -4,6 +4,11 @@
 *.iws
 *.ipr
 
+# Eclipse
+.settings
+.classpath
+.project
+
 # Gradle:
 .gradle
 
@@ -14,3 +19,4 @@
 /build
 
 /captures
+/bin/
