@@ -3,6 +3,7 @@ package com.hyunbogi.spring.dao;
 import com.hyunbogi.spring.dao.sql.SqlService;
 import com.hyunbogi.spring.model.Level;
 import com.hyunbogi.spring.model.User;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,6 +17,7 @@ public class UserDaoJdbc implements UserDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
+    @Setter
     private SqlService sqlService;
 
     private RowMapper<User> rowMapper = (rs, rowNum) -> {
@@ -34,10 +36,6 @@ public class UserDaoJdbc implements UserDao {
     @Autowired
     public void setDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    public void setSqlService(SqlService sqlService) {
-        this.sqlService = sqlService;
     }
 
     @Override

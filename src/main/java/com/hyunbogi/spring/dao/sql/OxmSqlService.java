@@ -2,6 +2,7 @@ package com.hyunbogi.spring.dao.sql;
 
 import com.hyunbogi.spring.dao.sql.jaxb.SqlType;
 import com.hyunbogi.spring.dao.sql.jaxb.Sqlmap;
+import lombok.Setter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Unmarshaller;
@@ -15,11 +16,9 @@ public class OxmSqlService implements SqlService {
     private final BaseSqlService baseSqlService = new BaseSqlService();
 
     private final OxmSqlReader oxmSqlReader = new OxmSqlReader();
-    private SqlRegistry sqlRegistry = new HashMapSqlRegistry();
 
-    public void setSqlRegistry(SqlRegistry sqlRegistry) {
-        this.sqlRegistry = sqlRegistry;
-    }
+    @Setter
+    private SqlRegistry sqlRegistry = new HashMapSqlRegistry();
 
     public void setUnmarshaller(Unmarshaller unmarshaller) {
         oxmSqlReader.setUnmarshaller(unmarshaller);

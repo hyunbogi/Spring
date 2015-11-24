@@ -1,5 +1,8 @@
 package com.hyunbogi.spring.model;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public enum Level {
     GOLD(3, null),
     SILVER(2, GOLD),
@@ -7,11 +10,6 @@ public enum Level {
 
     private final int value;
     private final Level next;
-
-    Level(int value, Level next) {
-        this.value = value;
-        this.next = next;
-    }
 
     public int intValue() {
         return value;

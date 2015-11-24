@@ -3,6 +3,7 @@ package com.hyunbogi.spring.service;
 import com.hyunbogi.spring.dao.UserDao;
 import com.hyunbogi.spring.model.Level;
 import com.hyunbogi.spring.model.User;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,18 +17,12 @@ public class UserServiceImpl implements UserService {
     public static final int MIN_RECOMMEND_FOR_GOLD = 30;
 
     @Autowired
+    @Setter
     private UserDao userDao;
 
     @Autowired
+    @Setter
     private MailSender mailSender;
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public void setMailSender(MailSender mailSender) {
-        this.mailSender = mailSender;
-    }
 
     @Override
     public void add(User user) {
